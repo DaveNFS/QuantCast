@@ -31,6 +31,17 @@ public class Spreadsheet {
 //			System.out.println();
 //		}
 		
+		
+		if(item.checkCyclicDependency())
+		{
+			System.out.println("All is well"); 
+		}
+		else
+		{
+			System.out.println("Cyclic Dependency found !!!");
+		}
+		
+		
 		//print the first line as is
 		System.out.println(item.columns + " " + item.rows);
 		//print answers 

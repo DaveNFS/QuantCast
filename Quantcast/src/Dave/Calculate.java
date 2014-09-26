@@ -28,7 +28,7 @@ public class Calculate {
 	
 	public boolean checkCyclicDependency()
 	{
-		return CyclicDependency.check(this.sheet);
+		return CyclicDependency.check(this.sheet, this.rows, this.columns);
 	}
 	
 	
@@ -112,13 +112,7 @@ public class Calculate {
 	}
 	
 	
-	public double solveExpression(String exp)
-	{
-		return -1; 
-	}
-	
-	
-	
+
 	
 	
 	

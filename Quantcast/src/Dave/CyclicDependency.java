@@ -2,10 +2,53 @@ package Dave;
 
 public class CyclicDependency {
 
-	public static boolean check(String a[][])
+	
+	// Note the bes way to implement this check in my opinion is implement a topo sort
+	// if the sort is sccessful then there are now dependencies 
+	
+	public static boolean check(String a[][], int rows, int cols)
 	{
-		//TODO: implement this
-		return false; 
+		CyclicDependency CD = new CyclicDependency();
+		boolean output = false;
+		
+		for(int i=0; i<rows; i++)
+		{
+			for(int j=0; j<cols; j++)
+			{
+			
+				// create Vertex for every cell
+				CD.addVertex("" + i + "" + j);
+				
+				
+				String currentValue = a[i][j];
+				// now find the dependencies if any:
+				
+					String tokens[] = currentValue.split(" ");
+					
+					for(String token : tokens)
+					{
+						if(new Calculate().containsLetters(token))
+						{
+							String temp[] = token.split(""); 
+							int row = new Calculate().letters.indexOf(temp[0]);
+							int col = Integer.parseInt(temp[1]);
+							col = col - 1; 
+							
+							// now add this dependency as an Edge in our graph
+							CD.addEdge(row, col);
+							
+						}
+						
+					}			
+				
+				
+			}
+		}
+		
+		output = CD.topo();
+		// if false there is a problem (cyclic dependency)
+		
+		return output;
 	}
 	
 	
@@ -15,7 +58,10 @@ public class CyclicDependency {
 	
 	
 	
-	
+	public int getNum(String x)
+	{
+		return -1;
+	}
 	
 	
 	
@@ -34,33 +80,40 @@ public class CyclicDependency {
 	 // current number of vertices
 	  private int numVerts; 
 
-	  private char sortedArray[];
+	  private String sortedArray[];
 
-	  public CyclicDependency() {
+	  public CyclicDependency() 
+	  {
 	    vertexList = new Vertex[MAX_VERTS];
 	    matrix = new int[MAX_VERTS][MAX_VERTS];
 	    numVerts = 0;
 	    for (int i = 0; i < MAX_VERTS; i++)
 	      for (int k = 0; k < MAX_VERTS; k++)
 	        matrix[i][k] = 0;
-	    sortedArray = new char[MAX_VERTS]; // sorted vert labels
+	    sortedArray = new String[MAX_VERTS]; 
+	    // sorted vert labels
 	  }
 
-	  public void addVertex(char lab) {
+	  public void addVertex(String lab) 
+	  {
 	    vertexList[numVerts++] = new Vertex(lab);
 	  }
 
-	  public void addEdge(int start, int end) {
+	  public void addEdge(int start, int end) 
+	  {
 	    matrix[start][end] = 1;
 	  }
 
-	  public void displayVertex(int v) {
+	  public void displayVertex(int v)
+	  {
 	    System.out.print(vertexList[v].label);
 	  }
 
-	  public void topo() // toplogical sort
+	  public boolean topo() 
 	  {
-	    int orig_nVerts = numVerts; 
+		 boolean output = true; 
+		  
+		// toplogical sort
 
 	    while (numVerts > 0) // while vertices remain,
 	    {
@@ -68,29 +121,28 @@ public class CyclicDependency {
 	      int currentVertex = noSuccessors();
 	      if (currentVertex == -1) // must be a cycle
 	      {
-	        System.out.println("ERROR: Graph has cycles");
-	        return;
+
+	        return false;
 	      }
 	      // insert vertex label in sorted array (start at end)
 	      sortedArray[numVerts - 1] = vertexList[currentVertex].label;
 
-	      deleteVertex(currentVertex); // delete vertex
+	      deleteVertex(currentVertex); 
+	      // delete vertex
 	    }
 
-	    // vertices all gone; display sortedArray
-	    System.out.print("Topologically sorted order: ");
-	    for (int j = 0; j < orig_nVerts; j++)
-	      System.out.print(sortedArray[j]);
-	    System.out.println("");
+	    return output;
 	  }
 
 	  public int noSuccessors() // returns vert with no successors (or -1 if no such verts)
 	  { 
 	    boolean isEdge; // edge from row to column in adjMat
 
-	    for (int row = 0; row < numVerts; row++) {
+	    for (int row = 0; row < numVerts; row++)
+	    {
 	      isEdge = false; // check edges
-	      for (int col = 0; col < numVerts; col++) {
+	      for (int col = 0; col < numVerts; col++)
+	      {
 	        if (matrix[row][col] > 0) // if edge to another,
 	        {
 	          isEdge = true;
@@ -103,7 +155,10 @@ public class CyclicDependency {
 	    return -1; // no
 	  }
 
-	  public void deleteVertex(int delVert) {
+	  
+	  
+	  public void deleteVertex(int delVert)
+	  {
 	    if (delVert != numVerts - 1) // if not last vertex, delete from vertexList
 	    {
 	      for (int j = delVert; j < numVerts - 1; j++)
@@ -118,12 +173,14 @@ public class CyclicDependency {
 	    numVerts--; // one less vertex
 	  }
 
-	  private void moveRowUp(int row, int length) {
+	  private void moveRowUp(int row, int length) 
+	  {
 	    for (int col = 0; col < length; col++)
 	      matrix[row][col] = matrix[row + 1][col];
 	  }
 
-	  private void moveColLeft(int col, int length) {
+	  private void moveColLeft(int col, int length)
+	  {
 	    for (int row = 0; row < length; row++)
 	      matrix[row][col] = matrix[row][col + 1];
 	  }
@@ -131,9 +188,9 @@ public class CyclicDependency {
 	  
 	  
 	  class Vertex {
-		  public char label;
+		  public String label;
 
-		  public Vertex(char lab) {
+		  public Vertex(String lab) {
 		    label = lab;
 		  }
 		}
