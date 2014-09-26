@@ -22,14 +22,32 @@ public class Spreadsheet {
 		
 
 		
+//		for(int i=0; i<item.rows; i++)
+//		{
+//			for(int j=0; j<item.columns; j++)
+//			{
+//				System.out.print(item.sheet[i][j] + "==");
+//			}
+//			System.out.println();
+//		}
+		
+		//print the first line as is
+		System.out.println(item.columns + " " + item.rows);
+		//print answers 
 		for(int i=0; i<item.rows; i++)
 		{
 			for(int j=0; j<item.columns; j++)
 			{
-				System.out.print(item.sheet[i][j] + "==");
+				System.out.println(item.computeCell(i, j));
 			}
-			System.out.println();
+		
 		}
+		
+		
+		//System.out.println(item.computeCell(1,0));
+		
+		
+		
 		
 		
 	}
